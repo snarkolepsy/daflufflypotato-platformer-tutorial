@@ -9,8 +9,10 @@ class Game:
     def __init__(self):
         # Initialize the pygame library
         pygame.init()
+
         # Set the window name
         pygame.display.set_caption('Ninja Game')
+
         # Set output window resolution
         self.screen = pygame.display.set_mode((640, 480))
         self.display = pygame.Surface((320, 240))
@@ -19,6 +21,7 @@ class Game:
 
         self.movement = [False, False]
 
+        # mass importing the following asset folders
         self.assets = {
             'decor' : load_images('tiles/decor'),
             'grass' : load_images('tiles/grass'),
@@ -39,8 +42,8 @@ class Game:
             # Rendering the tilemap behind the player
             self.tilemap.render(self.display)
 
-            # Calculate the horizontal movement vector
-            self.player.update((self.movement[1] - self.movement[0], 0)) # in a platformer you move left to right
+            # Calculate the horizontal movement vector and account for physics and collisions
+            self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0)) # in a platformer you move left to right
 
             # Rendering the moveable player sprite
             self.player.render(self.display)
