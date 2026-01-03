@@ -1,5 +1,6 @@
 import sys
 import pygame
+from pygame.examples.scroll import scroll_view
 
 from scripts.utils import load_image, load_images
 from scripts.entities import PhysicsEntity
@@ -34,19 +35,26 @@ class Game:
 
         self.tilemap = Tilemap(self, tile_size=16)
 
+        # Scrolling and camera handling
+        self.scroll = [0, 0]
+
     def run(self):
         while True:
             # Clearing the screen
             self.display.fill((14, 219, 248))  # RGB for sky blue
 
+            # Move towards the player at a dynamic rate
+            self.scroll[0] += (self.player.rect().centerx - self.display.get_width()/2 - self.scroll[0]) / 30
+            self.scroll[1] += (self.player.rect().centery - self.display.get_height()/2 - self.scroll[1]) / 30
+
             # Rendering the tilemap behind the player
-            self.tilemap.render(self.display)
+            self.tilemap.render(self.display, offset=self.scroll)
 
             # Calculate the horizontal movement vector and account for physics and collisions
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0)) # in a platformer you move left to right
 
             # Rendering the moveable player sprite
-            self.player.render(self.display)
+            self.player.render(self.display, offset=self.scroll)
 
             # Event-handling logic
             for event in pygame.event.get():
