@@ -1,5 +1,4 @@
 import os
-
 import pygame
 
 BASE_IMAGE_PATH = 'data/images/'

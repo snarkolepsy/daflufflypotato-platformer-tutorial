@@ -1,6 +1,4 @@
 import random
-from pydoc import render_doc
-
 
 class Cloud:
     def __init__(self, pos, img, speed, depth):

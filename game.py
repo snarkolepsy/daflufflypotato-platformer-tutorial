@@ -1,10 +1,13 @@
 import sys
+import math
 import pygame
+import random
 
 from scripts.utils import load_image, load_images, Animation
 from scripts.entities import PhysicsEntity, Player
 from scripts.tilemaps import Tilemap
 from scripts.clouds import Clouds
+from scripts.particles import Particle
 
 class Game:
     def __init__(self):
@@ -36,6 +39,7 @@ class Game:
             'player/jump' : Animation(load_images('entities/player/jump')),
             'player/slide' : Animation(load_images('entities/player/slide')),
             'player/wall_slide' : Animation(load_images('entities/player/wall_slide')),
+            'particle/leaf' : Animation(load_images('particles/leaf'), img_dur=20, loop=False),
         }
 
         self.clouds = Clouds(self.assets['clouds'], count=16)
@@ -46,6 +50,15 @@ class Game:
 
         # TEMPORARY: load the map we made to playtest
         self.tilemap.load('map.json')
+
+        # Locate the trees on the tilemap from which we can spawn leaves particles
+        self.leaf_spawners = []
+        for tree in self.tilemap.extract([('large_decor', 2)], keep=True):
+            self.leaf_spawners.append(pygame.Rect(4 + tree['pos'][0], 4 + tree['pos'][1], 23, 13))
+        print(self.leaf_spawners)
+
+        # Particles system
+        self.particles = []
 
         # Scrolling and camera handling
         self.scroll = [0, 0]
@@ -61,6 +74,13 @@ class Game:
             # Fixing subpixel "jitter" during camera motion
             render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
 
+            # Spawning particles
+            for rect in self.leaf_spawners:
+                if random.random() * 49999 < rect.width * rect.height:
+                    # Any random space within bounds of the rectangle
+                    pos = (rect.x + random.random() * rect.width, rect.y + random.random() * rect.height)
+                    self.particles.append(Particle(self, 'leaf', pos, velocity=[-0.1, 0.3], frame=random.randint(0, 20)))
+
             # Draw the clouds before the tiles so they're in the background
             self.clouds.update()
             self.clouds.render(self.display, offset=render_scroll)
@@ -73,6 +93,15 @@ class Game:
 
             # Rendering the moveable player sprite
             self.player.render(self.display, offset=render_scroll)
+
+            # Managing the particles system
+            for particle in self.particles.copy():
+                kill = particle.update()
+                particle.render(self.display, offset=render_scroll)
+                if particle.type == 'leaf':
+                    particle.position[0] += math.sin(particle.animation.frame * 0.035) * 0.3
+                if kill:
+                    self.particles.remove(particle)
 
             # Event-handling logic
             for event in pygame.event.get():
