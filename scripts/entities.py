@@ -14,6 +14,8 @@ class PhysicsEntity:
         self.flip = False
         self.set_action('idle')
 
+        self.last_movement = [0, 0]
+
     def rect(self):
         """Dynamically generate the rectangle representing a physics entity's collision box
 
@@ -72,7 +74,10 @@ class PhysicsEntity:
         if movement[0] < 0:
             self.flip = True
 
-        # Applying gravity to the y-coordinate
+        # Keeping track of the last intended movement, regardless of whether we successfully moved or not
+        self.last_movement = movement
+
+        # Applying gravity to the y-coordinate and cap at terminal velocity
         self.velocity[1] = min(5, self.velocity[1] + 0.1)
 
         # Should stop when we hit the ground or the ceiling
@@ -88,17 +93,66 @@ class Player(PhysicsEntity):
     def __init__(self, game, pos, size):
         super().__init__(game, 'player', pos, size)
         self.air_time = 0
+        self.jumps = 1
+        self.wall_slide = False
 
     def update(self, tilemap, movement=(0, 0)):
         super().update(tilemap, movement=movement)
         self.air_time += 1
-        if self.collisions['down']: # If we collide with the ground, air_time is reset
+        if self.collisions['down']: # If we collide with the ground, air_time and jumps counter are reset
             self.air_time = 0
+            self.jumps = 1
 
-        # If we're in the air for a significant amount of time, we're in a jump state
-        if self.air_time > 4:
-            self.set_action('jump')
-        elif movement[0] != 0: # Otherwise if we are moving horizontally, we're in run state
-            self.set_action('run')
-        else: # Or we might not be moving at all
-            self.set_action('idle')
+        # Wall-sliding logic
+        self.wall_slide = False
+        if (self.collisions['right'] or self.collisions['left']) and self.air_time > 4:
+            self.wall_slide = True
+            self.velocity[1] = min(self.velocity[1], 0.5)
+            # Animate in the correct direction while sliding down the wall
+            if self.collisions['right']:
+                self.flip = False
+            else:
+                self.flip = True
+            self.set_action('wall_slide')
+
+        # If we're in the middle of a wall slide, we should ignore the other animation states
+        if not self.wall_slide:
+            # If we're in the air for a significant amount of time, we're in a jump state
+            if self.air_time > 4:
+                self.set_action('jump')
+            elif movement[0] != 0: # Otherwise if we are moving horizontally, we're in run state
+                self.set_action('run')
+            else: # Or we might not be moving at all
+                self.set_action('idle')
+
+        # Reduce horizontal speed down to zero over time from either direction (like friction or air resistance)
+        if self.velocity[0] > 0:
+            self.velocity[0] = max(self.velocity[0] - 0.1, 0)
+        else:
+            self.velocity[0] = min(self.velocity[0] + 0.1, 0)
+
+    def jump(self):
+        """Jumping away from a wall we're sliding on or up from the ground
+
+        :return: True after a successful jump
+        """
+        if self.wall_slide:
+            if self.flip and self.last_movement[0] < 0: # Facing left wall and we attempted moving to the left
+                # Jump away from the wall, to the right
+                self.velocity[0] = 3.5
+                self.velocity[1] = -2.5
+                self.air_time = 5
+                self.jumps = max(0, self.jumps - 1)
+                return True
+            elif not self.flip and self.last_movement[0] > 0: # Facing right wall and we tried moving further right
+                # Jump to the left and away from the wall
+                self.velocity[0] = -3.5
+                self.velocity[1] = -2.5
+                self.air_time = 5
+                self.jumps = max(0, self.jumps - 1)
+                return True
+        elif self.jumps:
+            self.velocity[1] = -3
+            self.jumps -= 1
+            self.air_time = 5
+            return True

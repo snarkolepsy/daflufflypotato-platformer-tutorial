@@ -5,19 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ec5517d7-45b6-4360-bb67-b00c18bcc6a1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/scripts/particles.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/datfluffypotato-platformer-tutorial.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/map.json" beforeDir="false" afterPath="$PROJECT_DIR$/map.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/clouds.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/clouds.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/tilemaps.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/tilemaps.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/entities.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/entities.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,23 +33,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.editor.executor": "Run",
-    "Python.entities.executor": "Run",
-    "Python.game.executor": "Run",
-    "Python.particles.executor": "Run",
-    "Python.tilemaps.executor": "Run",
-    "Python.utils.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/daviddovo/Documents/GitHub/dafluffypotato-platformer-tutorial",
-    "settings.editor.selected.configurable": "editor.preferences.inline.completion"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.editor.executor&quot;: &quot;Run&quot;,
+    &quot;Python.entities.executor&quot;: &quot;Run&quot;,
+    &quot;Python.game.executor&quot;: &quot;Run&quot;,
+    &quot;Python.particles.executor&quot;: &quot;Run&quot;,
+    &quot;Python.tilemaps.executor&quot;: &quot;Run&quot;,
+    &quot;Python.utils.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/daviddovo/Documents/GitHub/dafluffypotato-platformer-tutorial&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.inline.completion&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
