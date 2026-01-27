@@ -54,7 +54,7 @@ class Tilemap:
         """List the details of the surrounding tiles
 
         :param pos -- the tuple contain the pixel position of current central cell
-        :return: a list of tiles and their properties
+        :return -- a list of tiles and their properties
         """
         tiles = []
 
@@ -67,11 +67,19 @@ class Tilemap:
         return tiles
 
     def save(self, path):
+        """Saving the current tilemap as a JSON file
+
+        :param path -- the file path wherein the .json file will reside
+        """
         f = open(path, 'w')
         json.dump({'tilemap' : self.tilemap, 'tile_size' : self.tile_size, 'offgrid' : self.offgrid_tiles}, f)
         f.close()
 
     def load(self, path):
+        """Loading a local JSON file as the tilemap for the current level
+
+        :param path -- the file path wherein the target .json file resides
+        """
         f = open(path, 'r')
         map_data = json.load(f)
         f.close()
@@ -79,6 +87,17 @@ class Tilemap:
         self.tilemap = map_data['tilemap']
         self.tile_size = map_data['tile_size']
         self.offgrid_tiles = map_data['offgrid']
+
+    def solid_check(self, pos):
+        """Checking whether the tile position observed is a solid and abides by the laws of PHYSICS_TILES
+
+        :param pos -- the X and Y position of the tile we're checking
+        :return -- the tile, if it is a valid physics object
+        """
+        tile_loc = str(int(pos[0] // self.tile_size)) + ';' + str(int(pos[1] // self.tile_size))
+        if tile_loc in self.tilemap:
+            if self.tilemap[tile_loc]['type'] in PHYSICS_TILES:
+                return self.tilemap[tile_loc]
 
     def physics_rects_around(self, pos):
         rects = []

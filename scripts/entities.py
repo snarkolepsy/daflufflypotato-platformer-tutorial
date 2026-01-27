@@ -1,5 +1,7 @@
 import math
 import random
+from http.cookiejar import offset_from_tz_string
+
 import pygame
 
 from scripts.particles import Particle
@@ -93,6 +95,44 @@ class PhysicsEntity:
 
     def render(self, surface, offset=(0, 0)):
         surface.blit(pygame.transform.flip(self.animation.img(), self.flip, False), (self.pos[0] - offset[0] + self.anim_offset[0], self.pos[1] - offset[1] - self.anim_offset[1]))
+
+class Enemy(PhysicsEntity):
+    def __init__(self, game, pos, size):
+        """Initialize the Enemy object"""
+        super().__init__(game, 'enemy', pos, size)
+
+        self.walking = 0
+
+    def update(self, tilemap, movement=(0, 0)):
+        """Update the Enemy's movement and sprite"""
+        if self.walking:
+            if tilemap.solid_check((self.rect().centerx + (-7 if self.flip else 7), self.pos[1] + 23)):
+                if self.collisions['right'] or self.collisions['left']:
+                    self.flip = not self.flip
+                else:
+                    movement = (movement[0] - 0.5 if self.flip else 0.5, movement[1], movement[1])
+            else:
+                self.flip = not self.flip
+            self.walking = max(0, self.walking - 1)
+        elif random.random() < 0.01:
+            self.walking = random.randint(30, 120)
+
+        super().update(tilemap, movement=movement)
+
+        # Setting the enemy to the correct animation sprite
+        if movement[0] != 0:
+            self.set_action('run')
+        else:
+            self.set_action('idle')
+
+    def render(self, surface, offset=(0, 0)):
+        """Render the Enemy object (with a gun)"""
+        super().render(surface, offset=offset)
+
+        if self.flip:
+            surface.blit(pygame.transform.flip(self.game.assets['gun'], True, False), (self.rect().centerx - 4 - self.game.assets['gun'].get_width() - offset[0], self.rect().centery + self.game.assets['gun'].get_height() - offset[1]))
+        else:
+            surface.blit(self.game.assets['gun'], (self.rect().centerx + 4 - offset[0], self.rect().centery + self.game.assets['gun'].get_height() - offset[1]))
 
 class Player(PhysicsEntity):
     def __init__(self, game, pos, size):

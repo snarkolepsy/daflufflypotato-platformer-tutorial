@@ -5,11 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ec5517d7-45b6-4360-bb67-b00c18bcc6a1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/map_elanor_backup.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/editor.py" beforeDir="false" afterPath="$PROJECT_DIR$/editor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/game.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/map.json" beforeDir="false" afterPath="$PROJECT_DIR$/map_backup.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/map.json" beforeDir="false" afterPath="$PROJECT_DIR$/map.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/entities.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/entities.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/tilemaps.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/tilemaps.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
