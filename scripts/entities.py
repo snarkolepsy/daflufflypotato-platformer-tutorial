@@ -1,10 +1,10 @@
 import math
 import random
-from http.cookiejar import offset_from_tz_string
 
 import pygame
 
 from scripts.particles import Particle
+from scripts.sparks import Spark
 
 class PhysicsEntity:
     def __init__(self, game, e_type, pos, size):
@@ -121,8 +121,14 @@ class Enemy(PhysicsEntity):
                 if abs(distance[1]) < 16:
                     if (self.flip and distance[0] < 0):
                         self.game.projectiles.append([[self.rect().centerx - 10, self.rect().centery + 4], -1.5, 0])
+                        # Gunshots emit sparks
+                        for i in range(4):
+                            self.game.sparks.append(Spark(self.game.projectiles[-1][0], random.random() - 0.5 + math.pi, 2 + random.random())) # Sparks to the left, with variance
                     if (not self.flip and distance[0] > 0):
                         self.game.projectiles.append([[self.rect().centerx + 10, self.rect().centery + 4], 1.5, 0])
+                        # Gunshots emit sparks
+                        for i in range(4):
+                            self.game.sparks.append(Spark(self.game.projectiles[-1][0], random.random() - 0.5, 2 + random.random())) # Sparks to the right, with random variants
 
         elif random.random() < 0.01:
             self.walking = random.randint(30, 120)

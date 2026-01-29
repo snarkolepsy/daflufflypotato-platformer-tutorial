@@ -8,9 +8,11 @@ from scripts.entities import PhysicsEntity, Player, Enemy
 from scripts.tilemaps import Tilemap
 from scripts.clouds import Clouds
 from scripts.particles import Particle
+from scripts.sparks import Spark
 
 class Game:
     def __init__(self):
+        """Initialize the Game!"""
         # Initialize the pygame library
         pygame.init()
 
@@ -52,10 +54,14 @@ class Game:
         self.player = Player(self, (50, 50), (8, 15))
 
         self.tilemap = Tilemap(self, tile_size=16)
+        self.load_level(0)
 
-        # TEMPORARY: load the map we made to playtest
-        self.tilemap.load('map.json')
+    def load_level(self, map_id):
+        """Loading the pre-made levels
 
+        :param map_id : the name of the .json file
+        """
+        self.tilemap.load('data/maps/' + str(map_id) + '.json')
         # Locate the trees on the tilemap from which we can spawn leaves particles
         self.leaf_spawners = []
         for tree in self.tilemap.extract([('large_decor', 2)], keep=True):
@@ -65,7 +71,7 @@ class Game:
         self.enemies = []
         for spawner in self.tilemap.extract([('spawners', 0), ('spawners', 1)]):
             if spawner['variant'] == 0:
-                self.player.pos = spawner['pos'] # Player spawning position
+                self.player.pos = spawner['pos']  # Player spawning position
             else:
                 self.enemies.append(Enemy(self, spawner['pos'], (8, 15)))
 
@@ -74,6 +80,9 @@ class Game:
 
         # Particles system
         self.particles = []
+
+        # Effects for getting shot and taking hits
+        self.sparks = []
 
         # Scrolling and camera handling
         self.scroll = [0, 0]
@@ -119,15 +128,28 @@ class Game:
                 projectile[2] += 1
                 img = self.assets['projectile']
                 self.display.blit(img, (projectile[0][0] - img.get_width() / 2 - render_scroll[0], projectile[0][1] - img.get_height() / 2 - render_scroll[1]))
-                if self.tilemap.solid_check(projectile[0]):
+                if self.tilemap.solid_check(projectile[0]): # Projectile strikes solid object
                     self.projectiles.remove(projectile)
-                elif projectile[2] > 360:
+                    for i in range(4):
+                        self.sparks.append(Spark(projectile[0], random.random() - 0.5 + (math.pi if projectile[1] > 0 else 0), 2 + random.random()))
+                elif projectile[2] > 360: # Timer on projectile passed 6 seconds
                     self.projectiles.remove(projectile)
-                elif abs(self.player.dashing) < 50:
+                elif abs(self.player.dashing) < 50: # Player is in a vulnerable state
                     # Check whether Player is getting hit by the projectile
                     if self.player.rect().collidepoint(projectile[0]):
                         self.projectiles.remove(projectile)
-                        print("HIT")
+                        for i in range(40):
+                            angle = random.random() * math.pi * 2
+                            speed = random.random() * 5
+                            self.sparks.append(Spark(self.player.rect().center, angle, 2 + random.random()))
+                            self.particles.append(Particle(self, 'particle', self.player.rect().center, velocity=[math.cos(angle + math.pi) * speed * 0.5, math.sin(angle + math.pi) * speed * 0.5], frame=random.randint(0, 7)))
+
+            # Drawing sparks effects
+            for spark in self.sparks.copy():
+                kill = spark.update()
+                spark.render(self.display, offset=render_scroll)
+                if kill:
+                    self.sparks.remove(spark)
 
             # Managing the particles system
             for particle in self.particles.copy():
